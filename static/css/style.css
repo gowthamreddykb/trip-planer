@@ -1,0 +1,551 @@
+/* ==========================================================================
+   Trip Planner - Travel Journal Aesthetic Styling
+   Matches "Pastel Travel Place Management Form" Reference Exactly
+   ========================================================================== */
+
+:root {
+  --tp-bg: #F9F6F0;
+  --tp-card-bg: #FFFFFF;
+  --tp-card-border: #E8E2D6;
+  --tp-teal-dark: #094044;
+  --tp-teal: #0A4D52;
+  --tp-teal-light: #166A70;
+  --tp-teal-subtle: #F2F8F8;
+  --tp-coral: #E76F51;
+  --tp-coral-hover: #D65A3C;
+  --tp-coral-subtle: #FFF2EF;
+  --tp-sage: #4A7C59;
+  --tp-text-dark: #1E2E32;
+  --tp-text-muted: #6B7C80;
+  --tp-font-heading: 'Georgia', 'Playfair Display', serif;
+  --tp-font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --tp-radius: 16px;
+}
+
+body {
+  background-color: var(--tp-bg);
+  color: var(--tp-text-dark);
+  font-family: var(--tp-font-body);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --------------------------------------------------------------------------
+   Navbar
+   -------------------------------------------------------------------------- */
+.tp-navbar {
+  background-color: var(--tp-teal-dark) !important;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+  padding: 0.75rem 1.5rem;
+}
+
+.tp-brand {
+  font-family: var(--tp-font-heading);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #FFFFFF !important;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  letter-spacing: -0.5px;
+}
+
+.tp-brand i {
+  color: #6EE7B7;
+}
+
+.tp-nav-link {
+  color: #D1E5E7 !important;
+  font-weight: 500;
+  font-size: 0.95rem;
+  padding: 0.5rem 1rem !important;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.tp-nav-link:hover, .tp-nav-link.active {
+  color: #FFFFFF !important;
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
+.tp-user-btn {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 20px;
+  padding: 0.35rem 0.9rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.tp-user-btn:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+  color: #FFFFFF;
+}
+
+/* --------------------------------------------------------------------------
+   Buttons & Badges
+   -------------------------------------------------------------------------- */
+.btn-tp-primary {
+  background-color: var(--tp-teal);
+  color: #FFFFFF;
+  border: 1px solid var(--tp-teal);
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 0.55rem 1.25rem;
+  transition: all 0.2s ease;
+}
+
+.btn-tp-primary:hover {
+  background-color: var(--tp-teal-dark);
+  color: #FFFFFF;
+  border-color: var(--tp-teal-dark);
+  box-shadow: 0 4px 12px rgba(9, 64, 68, 0.25);
+}
+
+.btn-tp-coral {
+  background-color: var(--tp-coral);
+  color: #FFFFFF;
+  border: none;
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 0.55rem 1.25rem;
+  transition: all 0.2s ease;
+}
+
+.btn-tp-coral:hover {
+  background-color: var(--tp-coral-hover);
+  color: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(231, 111, 81, 0.3);
+}
+
+.btn-tp-outline {
+  border: 1.5px solid var(--tp-teal);
+  color: var(--tp-teal);
+  background: transparent;
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 0.45rem 1rem;
+}
+
+.btn-tp-outline:hover {
+  background-color: var(--tp-teal);
+  color: #FFFFFF;
+}
+
+.badge-nature { background-color: #D1FAE5; color: #065F46; }
+.badge-beach { background-color: #E0F2FE; color: #0369A1; }
+.badge-historical { background-color: #FEF3C7; color: #92400E; }
+.badge-mountain { background-color: #EDE9FE; color: #5B21B6; }
+.badge-adventure { background-color: #FFEDD5; color: #9A3412; }
+.badge-food { background-color: #FCE7F3; color: #9D174D; }
+.badge-culture { background-color: #F3E8FF; color: #6B21A8; }
+
+.badge-category {
+  font-weight: 600;
+  font-size: 0.75rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 20px;
+}
+
+/* --------------------------------------------------------------------------
+   Cards & Layouts
+   -------------------------------------------------------------------------- */
+.tp-card {
+  background-color: var(--tp-card-bg);
+  border: 1.5px solid var(--tp-card-border);
+  border-radius: var(--tp-radius);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tp-card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+/* --------------------------------------------------------------------------
+   Form Fields - Matches User Reference Screenshot Exactly
+   -------------------------------------------------------------------------- */
+.tp-field-label {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #1A3038;
+  margin-bottom: 0.45rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.tp-field-label i {
+  color: #0A4D52;
+  font-size: 0.95rem;
+}
+
+.tp-field-label .text-danger {
+  color: #E76F51 !important;
+  font-weight: 700;
+  margin-left: 2px;
+}
+
+.tp-input-group {
+  border: 1.5px solid #DFD9CE;
+  border-radius: 12px;
+  background-color: #FFFFFF;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 0 0.5rem;
+}
+
+.tp-input-group:focus-within {
+  border-color: #0A4D52;
+  box-shadow: 0 0 0 3px rgba(10, 77, 82, 0.1);
+  background-color: #FFFFFF;
+}
+
+.tp-input-group .input-icon {
+  padding: 0 0.5rem 0 0.35rem;
+  color: #7B8D91;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  font-size: 1rem;
+}
+
+.tp-input-group .form-control,
+.tp-input-group .form-select {
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  padding: 0.5rem 0.5rem;
+  font-size: 0.92rem;
+  color: #212529;
+}
+
+.tp-input-group .form-control::placeholder {
+  color: #A3B0B3;
+  font-size: 0.9rem;
+}
+
+.tp-textarea-wrapper {
+  position: relative;
+  border: 1.5px solid #DFD9CE;
+  border-radius: 12px;
+  background-color: #FFFFFF;
+  transition: all 0.2s ease;
+}
+
+.tp-textarea-wrapper:focus-within {
+  border-color: #0A4D52;
+  box-shadow: 0 0 0 3px rgba(10, 77, 82, 0.1);
+}
+
+.tp-textarea-wrapper textarea {
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  padding: 0.75rem 0.85rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #212529;
+  width: 100%;
+  resize: vertical;
+}
+
+.tp-textarea-wrapper textarea::placeholder {
+  color: #A3B0B3;
+}
+
+.tp-char-count {
+  position: absolute;
+  bottom: 6px;
+  right: 10px;
+  font-size: 0.72rem;
+  color: #9EABAE;
+  user-select: none;
+}
+
+/* --------------------------------------------------------------------------
+   Repeating Place Card (Matches User Reference Image Exactly)
+   -------------------------------------------------------------------------- */
+.place-card-repeater {
+  position: relative;
+  background-color: #FFFFFF;
+  border: 1.5px solid #E8E2D6;
+  border-radius: 20px;
+  padding: 1.75rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+}
+
+.place-card-header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 1.25rem;
+}
+
+.btn-remove-card {
+  color: #D9534F;
+  background-color: #FFF2EF;
+  border: 1.5px solid #FFDCD3;
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 0.45rem 1rem;
+  border-radius: 8px;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.btn-remove-card:hover {
+  background-color: #FFE3DC;
+  color: #C9302C;
+  border-color: #FFC0B3;
+}
+
+.btn-add-card {
+  color: #FFFFFF;
+  background-color: #0A4D52;
+  border: 1px solid #0A4D52;
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 0.45rem 1.15rem;
+  border-radius: 8px;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.btn-add-card:hover {
+  background-color: #083D41;
+  color: #FFFFFF;
+  box-shadow: 0 3px 10px rgba(10, 77, 82, 0.25);
+}
+
+/* Left Hero Portrait Photo Frame */
+.place-hero-portrait-frame {
+  width: 100%;
+  height: 100%;
+  min-height: 420px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.09);
+  border: 1px solid #DCD6C9;
+  position: relative;
+  background-color: #F1ECE2;
+}
+
+.place-hero-portrait-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.primary-image-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background-color: #094044;
+  color: #FFFFFF;
+  font-size: 0.76rem;
+  font-weight: 700;
+  padding: 0.32rem 0.8rem;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  z-index: 2;
+}
+
+/* Image Upload Control Box */
+.tp-image-upload-box {
+  background-color: #F2F8F8;
+  border: 1.5px solid #D2E4E4;
+  border-radius: 12px;
+  padding: 0.45rem 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-height: 48px;
+}
+
+.thumb-mini-wrapper {
+  position: relative;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.thumb-mini-img {
+  width: 44px;
+  height: 44px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #C4DADA;
+  display: block;
+}
+
+.btn-tp-upload-action {
+  background-color: #FFFFFF;
+  border: 1.5px solid #C8DDDD;
+  color: #0A4D52;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 0.4rem 0.9rem;
+  border-radius: 8px;
+  transition: all 0.2s;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.btn-tp-upload-action:hover {
+  background-color: #0A4D52;
+  color: #FFFFFF;
+  border-color: #0A4D52;
+  box-shadow: 0 2px 6px rgba(10, 77, 82, 0.15);
+}
+
+/* --------------------------------------------------------------------------
+   Section Dividers & Stamps
+   -------------------------------------------------------------------------- */
+.section-divider-title {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 1.25rem;
+}
+
+.section-divider-title h4 {
+  font-family: var(--tp-font-heading);
+  font-style: italic;
+  font-weight: 700;
+  color: var(--tp-teal-dark);
+  margin: 0;
+  white-space: nowrap;
+}
+
+.section-divider-line {
+  flex-grow: 1;
+  height: 1.5px;
+  background-color: #D9D2C5;
+  margin-left: 0.5rem;
+}
+
+.travel-heading {
+  font-family: var(--tp-font-heading);
+  color: var(--tp-teal-dark);
+  font-style: italic;
+  font-weight: 700;
+}
+
+.travel-stamp {
+  border: 2px dashed #93A392;
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #557564;
+  transform: rotate(-8deg);
+  user-select: none;
+  opacity: 0.85;
+}
+
+.travel-stamp-square {
+  border: 1.5px dashed #D38E75;
+  border-radius: 8px;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #C25E42;
+  transform: rotate(3deg);
+  text-transform: uppercase;
+  user-select: none;
+  opacity: 0.9;
+}
+
+/* --------------------------------------------------------------------------
+   Explore Details Hero
+   -------------------------------------------------------------------------- */
+.explore-hero-card {
+  position: relative;
+  border-radius: var(--tp-radius);
+  overflow: hidden;
+  min-height: 280px;
+  color: #FFFFFF;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+}
+
+.explore-hero-card .hero-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+
+.explore-hero-card .hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, rgba(9, 64, 68, 0.92) 0%, rgba(9, 64, 68, 0.6) 60%, rgba(0,0,0,0.2) 100%);
+  z-index: 2;
+}
+
+.explore-hero-card .hero-content {
+  position: relative;
+  z-index: 3;
+  padding: 2.5rem;
+}
+
+/* --------------------------------------------------------------------------
+   Timeline & Day Tabs
+   -------------------------------------------------------------------------- */
+.day-tab-btn {
+  background-color: #FFFFFF;
+  border: 1px solid var(--tp-card-border);
+  color: var(--tp-text-dark);
+  font-weight: 600;
+  padding: 0.5rem 1.25rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.day-tab-btn.active {
+  background-color: var(--tp-teal-dark);
+  color: #FFFFFF;
+  border-color: var(--tp-teal-dark);
+}
+
+/* --------------------------------------------------------------------------
+   Footer
+   -------------------------------------------------------------------------- */
+.tp-footer {
+  margin-top: auto;
+  background-color: #EFE9DC;
+  border-top: 1px solid #DED8CA;
+  padding: 2rem 0 1.5rem;
+  font-size: 0.9rem;
+  color: var(--tp-text-muted);
+}

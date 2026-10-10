@@ -1,0 +1,325 @@
+{% extends "base.html" %}
+
+{% block title %}{{ place.name }} — Explore Place Details{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <!-- Top bar: Back to Explore & Decorative Header matching Image 2 -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <a href="{{ url_for('explore') }}" class="btn btn-outline-secondary btn-sm">
+      <i class="bi bi-arrow-left me-1"></i> Back to Explore
+    </a>
+    <span class="travel-stamp-square d-none d-sm-inline-block">
+      <i class="bi bi-stars"></i> Explore • Dream • Discover
+    </span>
+  </div>
+
+  <div class="d-flex align-items-center gap-2 mb-3">
+    <i class="bi bi-map fs-3 text-tp-teal"></i>
+    <h3 class="fw-bold travel-heading mb-0">Explore Place Details</h3>
+  </div>
+
+  <!-- Hero Banner matching Image 2 -->
+  <div class="explore-hero-card mb-4 position-relative">
+    <img src="{{ primary_image or 'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?auto=format&fit=crop&w=1400&q=80' }}" 
+         alt="{{ place.name }}" class="hero-bg">
+    <div class="hero-overlay"></div>
+    
+    <div class="hero-content">
+      <div class="row align-items-center">
+        <div class="col-lg-8">
+          <span class="badge bg-white text-dark mb-2 px-3 py-1 fw-bold">
+            <i class="bi bi-tag-fill text-danger me-1"></i> {{ place.category }}
+          </span>
+          <h1 class="display-5 fw-bold text-white mb-2 travel-heading">{{ place.name }}</h1>
+          <p class="text-light mb-2 fs-6 opacity-90" style="max-width: 600px;">
+            {{ place.short_description }}
+          </p>
+          <div class="d-flex align-items-center gap-3 text-light small">
+            <span><i class="bi bi-geo-alt-fill text-danger me-1"></i> {{ place.destination_name }}{% if place.address %}, {{ place.address }}{% endif %}</span>
+          </div>
+        </div>
+
+        <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+          <button type="button" class="btn btn-tp-coral btn-lg px-4 shadow" data-bs-toggle="modal" data-bs-target="#addToTripModal">
+            <i class="bi bi-plus-circle me-2"></i> Add to My Trip
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Stat Cards matching Image 2 -->
+  <div class="row g-3 mb-4 text-center">
+    <div class="col-md-4">
+      <div class="card tp-card p-3 border-0 shadow-sm h-100">
+        <div class="d-flex align-items-center justify-content-center gap-3">
+          <i class="bi bi-calendar-check fs-2 text-primary"></i>
+          <div class="text-start">
+            <small class="text-muted d-block text-uppercase fw-semibold" style="font-size: 0.7rem;">Best Time to Visit</small>
+            <strong class="text-dark fs-6">{{ place.best_time_to_visit or 'Oct – Mar' }}</strong>
+            <small class="text-muted d-block" style="font-size: 0.75rem;">(Pleasant weather)</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card tp-card p-3 border-0 shadow-sm h-100">
+        <div class="d-flex align-items-center justify-content-center gap-3">
+          <i class="bi bi-clock-history fs-2 text-warning"></i>
+          <div class="text-start">
+            <small class="text-muted d-block text-uppercase fw-semibold" style="font-size: 0.7rem;">Typical Visit Duration</small>
+            <strong class="text-dark fs-6">{{ place.recommended_duration or '1 – 2 Days' }}</strong>
+            <small class="text-muted d-block" style="font-size: 0.75rem;">(for main attractions)</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card tp-card p-3 border-0 shadow-sm h-100">
+        <div class="d-flex align-items-center justify-content-center gap-3">
+          <i class="bi bi-wallet2 fs-2 text-success"></i>
+          <div class="text-start">
+            <small class="text-muted d-block text-uppercase fw-semibold" style="font-size: 0.7rem;">Estimated Cost</small>
+            <strong class="text-dark fs-6">₹ {{ "{:,.0f}".format(place.estimated_cost_min) }} – ₹ {{ "{:,.0f}".format(place.estimated_cost_max) }}</strong>
+            <small class="text-muted d-block" style="font-size: 0.75rem;">(per person, approx.)</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Things to See & Do Section matching Image 2 -->
+  <div class="card tp-card p-4 border-0 shadow-sm mb-4">
+    <div class="d-flex align-items-center gap-2 mb-3">
+      <i class="bi bi-binoculars fs-4 text-tp-teal"></i>
+      <h4 class="fw-bold travel-heading mb-0">Things to See & Do</h4>
+    </div>
+
+    {% if things_to_see_list %}
+      <div class="row g-2 mb-4">
+        {% for item in things_to_see_list %}
+          <div class="col-md-6">
+            <div class="d-flex align-items-center gap-2 p-2 bg-light rounded border">
+              <i class="bi bi-check2-circle text-success fs-5"></i>
+              <span class="fw-medium text-dark">{{ item }}</span>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <!-- Gallery / Other places in destination -->
+    {% if images and images|length > 1 %}
+      <h6 class="fw-bold text-muted text-uppercase mb-3" style="font-size: 0.8rem;">Photo Gallery</h6>
+      <div class="row g-3 mb-4">
+        {% for img in images %}
+          <div class="col-6 col-md-3">
+            <img src="{{ img.image_url }}" alt="{{ img.alt_text or place.name }}" 
+                 class="img-fluid rounded-3 shadow-sm" style="height: 140px; width: 100%; object-fit: cover;">
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <!-- Other attractions in this destination (Image 2 mini cards) -->
+    {% if other_places %}
+      <h6 class="fw-bold text-muted text-uppercase mb-3" style="font-size: 0.8rem;">More to Explore in {{ place.destination_name }}</h6>
+      <div class="row g-3">
+        {% for other in other_places %}
+          <div class="col-6 col-md-3">
+            <div class="card h-100 border rounded-3 overflow-hidden shadow-sm">
+              <img src="{{ other.image_url or 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=400&q=80' }}" 
+                   class="card-img-top" alt="{{ other.name }}" style="height: 110px; object-fit: cover;">
+              <div class="p-2">
+                <h6 class="fw-bold mb-1 small text-truncate">{{ other.name }}</h6>
+                <small class="text-muted d-block text-truncate mb-2" style="font-size: 0.75rem;">{{ other.short_description }}</small>
+                <a href="{{ url_for('place_details', place_id=other.id) }}" class="btn btn-sm btn-outline-danger w-100 py-0" style="font-size: 0.75rem;">
+                  View Details <i class="bi bi-arrow-right"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Three Bottom Cards matching Image 2: Local Food, Travel Tips, Suggested Itinerary -->
+  <div class="row g-4 mb-4">
+    <!-- Local Food Card -->
+    <div class="col-md-4">
+      <div class="card tp-card p-4 border-0 shadow-sm h-100">
+        <div class="d-flex align-items-center gap-2 mb-3">
+          <i class="bi bi-cup-hot fs-4 text-danger"></i>
+          <h5 class="fw-bold travel-heading mb-0">Local Food</h5>
+        </div>
+        <img src="https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=600&q=80" 
+             class="img-fluid rounded-3 mb-3 shadow-sm" alt="Local Food" style="height: 120px; width: 100%; object-fit: cover;">
+        {% if local_food_list %}
+          <ul class="list-unstyled mb-0 small">
+            {% for food in local_food_list %}
+              <li class="mb-2"><i class="bi bi-dot text-danger fs-4 align-middle"></i> {{ food }}</li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="text-muted small">Traditional local cuisine, authentic dishes, and local specialties.</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Travel Tips Card -->
+    <div class="col-md-4">
+      <div class="card tp-card p-4 border-0 shadow-sm h-100">
+        <div class="d-flex align-items-center gap-2 mb-3">
+          <i class="bi bi-lightbulb fs-4 text-warning"></i>
+          <h5 class="fw-bold travel-heading mb-0">Travel Tips</h5>
+        </div>
+        {% if travel_tips_list %}
+          <ul class="list-unstyled mb-0 small">
+            {% for tip in travel_tips_list %}
+              <li class="mb-2 d-flex align-items-start gap-2">
+                <i class="bi bi-check2 text-success mt-1"></i>
+                <span>{{ tip }}</span>
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="text-muted small">Carry comfortable footwear, respect cultural customs, and keep hydrated.</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Suggested Itinerary Card -->
+    <div class="col-md-4">
+      <div class="card tp-card p-4 border-0 shadow-sm h-100">
+        <div class="d-flex align-items-center gap-2 mb-3">
+          <i class="bi bi-journal-text fs-4 text-tp-teal"></i>
+          <h5 class="fw-bold travel-heading mb-0">Suggested Itinerary</h5>
+        </div>
+        {% if place.suggested_itinerary %}
+          <div class="small text-muted" style="white-space: pre-line;">
+            {{ place.suggested_itinerary }}
+          </div>
+        {% else %}
+          <p class="text-muted small">Explore morning highlights, enjoy a regional lunch, and catch a panoramic sunset.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom CTA -->
+  <div class="text-center py-3">
+    <button type="button" class="btn btn-tp-coral btn-lg px-5 shadow" data-bs-toggle="modal" data-bs-target="#addToTripModal">
+      <i class="bi bi-plus-circle me-2"></i> Add to My Trip
+    </button>
+  </div>
+
+</div>
+
+<!-- Modal: Add to My Trip -->
+<div class="modal fade" id="addToTripModal" tabindex="-1" aria-labelledby="addToTripModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content tp-card border-0 shadow">
+      
+      <div class="modal-header bg-light">
+        <h5 class="modal-title fw-bold" id="addToTripModalLabel">
+          <i class="bi bi-plus-circle text-danger me-2"></i>Add "{{ place.name }}" to Trip
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      {% if current_user %}
+        {% if user_trips %}
+          <form action="{{ url_for('add_place_to_trip', place_id=place.id) }}" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            
+            <div class="modal-body p-4">
+              <div class="mb-3">
+                <label class="form-label fw-bold">Select Trip <span class="text-danger">*</span></label>
+                <select name="trip_id" id="modalTripSelect" class="form-select" required onchange="updateDateBounds()">
+                  {% for t in user_trips %}
+                    <option value="{{ t.id }}" data-start="{{ t.start_date.isoformat() }}" data-end="{{ t.end_date.isoformat() }}">
+                      {{ t.destination }} ({{ t.start_date.strftime("%b %d") }} – {{ t.end_date.strftime("%b %d, %Y") }})
+                    </option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label fw-bold">Activity Name</label>
+                <input type="text" name="name" class="form-control" value="Visit {{ place.name }}" required>
+              </div>
+
+              <div class="row g-2 mb-3">
+                <div class="col-7">
+                  <label class="form-label fw-bold">Activity Date <span class="text-danger">*</span></label>
+                  <input type="date" name="activity_date" id="modalActivityDate" class="form-control" 
+                         value="{{ user_trips[0].start_date.isoformat() }}" 
+                         min="{{ user_trips[0].start_date.isoformat() }}" 
+                         max="{{ user_trips[0].end_date.isoformat() }}" required>
+                </div>
+                <div class="col-5">
+                  <label class="form-label fw-bold">Time</label>
+                  <input type="time" name="activity_time" class="form-control" value="10:00">
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label fw-bold">Estimated Cost (₹)</label>
+                <div class="input-group">
+                  <span class="input-group-text">₹</span>
+                  <input type="number" name="estimated_cost" class="form-control" value="{{ place.estimated_cost_min }}" min="0" step="50" required>
+                </div>
+              </div>
+            </div>
+
+            <div class="modal-footer bg-light">
+              <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn btn-tp-primary fw-bold">Add to Trip</button>
+            </div>
+          </form>
+        {% else %}
+          <div class="modal-body p-4 text-center">
+            <i class="bi bi-briefcase fs-1 text-muted mb-3 d-block"></i>
+            <h5 class="fw-bold">You don't have any trips planned yet!</h5>
+            <p class="text-muted small mb-4">Create a trip first, then you can add {{ place.name }} directly into your day-wise itinerary.</p>
+            <a href="{{ url_for('create_trip') }}" class="btn btn-tp-coral">Create a Trip</a>
+          </div>
+        {% endif %}
+      {% else %}
+        <div class="modal-body p-4 text-center">
+          <i class="bi bi-box-arrow-in-right fs-1 text-muted mb-3 d-block"></i>
+          <h5 class="fw-bold">Log in to Plan Your Trip</h5>
+          <p class="text-muted small mb-4">Please log in to add this place to your private itinerary.</p>
+          <div class="d-flex justify-content-center gap-2">
+            <a href="{{ url_for('login', next=request.path) }}" class="btn btn-tp-primary">Log In</a>
+            <a href="{{ url_for('register') }}" class="btn btn-outline-secondary">Register</a>
+          </div>
+        </div>
+      {% endif %}
+
+    </div>
+  </div>
+</div>
+
+<script>
+function updateDateBounds() {
+  const sel = document.getElementById('modalTripSelect');
+  const opt = sel.options[sel.selectedIndex];
+  if (opt) {
+    const start = opt.getAttribute('data-start');
+    const end = opt.getAttribute('data-end');
+    const dateInput = document.getElementById('modalActivityDate');
+    if (dateInput) {
+      dateInput.min = start;
+      dateInput.max = end;
+      dateInput.value = start;
+    }
+  }
+}
+</script>
+{% endblock %}

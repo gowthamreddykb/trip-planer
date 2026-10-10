@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Page Not Found — Trip Planner{% endblock %}
+
+{% block content %}
+<div class="container py-5 text-center">
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+      <div class="card tp-card p-5 border-0 shadow-sm">
+        <div class="rounded-circle bg-warning bg-opacity-10 d-inline-flex align-items-center justify-content-center mx-auto mb-3" style="width: 70px; height: 70px;">
+          <i class="bi bi-compass fs-2 text-warning"></i>
+        </div>
+
+        <h3 class="fw-bold travel-heading mb-2 text-dark">Lost in Exploration?</h3>
+        <p class="text-muted mb-4">
+          The destination or page you are looking for doesn't exist or has moved.
+        </p>
+
+        <div>
+          <a href="{{ url_for('home') }}" class="btn btn-tp-primary px-4 py-2">
+            Back to Home
+          </a>
+          <a href="{{ url_for('explore') }}" class="btn btn-outline-secondary px-4 py-2 ms-2">
+            Explore Places
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

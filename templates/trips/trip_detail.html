@@ -1,0 +1,200 @@
+{% extends "base.html" %}
+
+{% block title %}{{ trip.destination }} Trip — Trip Planner{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <!-- Breadcrumb / Navigation -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <a href="{{ url_for('my_trips') }}" class="btn btn-outline-secondary btn-sm">
+      <i class="bi bi-arrow-left me-1"></i> Back to My Trips
+    </a>
+    <div class="d-flex gap-2">
+      <a href="{{ url_for('edit_trip', trip_id=trip.id) }}" class="btn btn-outline-primary btn-sm">
+        <i class="bi bi-pencil me-1"></i> Edit Trip
+      </a>
+      <form action="{{ url_for('delete_trip', trip_id=trip.id) }}" method="POST" onsubmit="return confirm('Delete this entire trip and all activities?');" class="d-inline">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="submit" class="btn btn-outline-danger btn-sm">
+          <i class="bi bi-trash me-1"></i> Delete Trip
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Trip Hero Banner (Matching Image 3 Screen 5) -->
+  <div class="card tp-card border-0 shadow-sm overflow-hidden mb-4 position-relative text-white" 
+       style="background: linear-gradient(to right, rgba(9, 64, 68, 0.9) 0%, rgba(9, 64, 68, 0.75) 60%, rgba(9, 64, 68, 0.4) 100%), url('{{ cover_image or "https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?auto=format&fit=crop&w=1200&q=80" }}') center/cover; min-height: 180px;">
+    
+    <div class="p-4 d-flex flex-column flex-md-row justify-content-between align-items-md-center position-relative z-1">
+      <div>
+        <span class="badge bg-white text-dark mb-2 px-2 py-1"><i class="bi bi-pin-map-fill text-danger me-1"></i> Trip Itinerary</span>
+        <h2 class="fw-bold travel-heading text-white mb-1">{{ trip.destination }} Trip</h2>
+        <p class="mb-0 text-light opacity-90">
+          <i class="bi bi-calendar-event me-1"></i>
+          {{ trip.start_date.strftime("%b %d, %Y") }} – {{ trip.end_date.strftime("%b %d, %Y") }} 
+          <span class="badge bg-dark bg-opacity-50 ms-2">{{ total_days }} day{% if total_days > 1 %}s{% endif %}</span>
+        </p>
+      </div>
+
+      <!-- Budget Badges (Matches Image 3 Screen 5) -->
+      <div class="bg-white bg-opacity-95 text-dark p-3 rounded-3 shadow-sm mt-3 mt-md-0 d-flex gap-3 text-center border">
+        <div>
+          <small class="text-muted d-block text-uppercase" style="font-size: 0.7rem;">Total Cost</small>
+          <span class="fw-bold fs-5 text-dark">₹ {{ "{:,.2f}".format(total_cost) }}</span>
+        </div>
+        <div class="border-start ps-3">
+          <small class="text-muted d-block text-uppercase" style="font-size: 0.7rem;">Budget</small>
+          <span class="fw-bold fs-5 text-dark">₹ {{ "{:,.2f}".format(budget) }}</span>
+        </div>
+        <div class="border-start ps-3">
+          {% if is_over_budget %}
+            <small class="text-danger fw-bold d-block text-uppercase" style="font-size: 0.7rem;">Over Budget</small>
+            <span class="fw-bold fs-5 text-danger">₹ {{ "{:,.2f}".format(remaining|abs) }}</span>
+          {% else %}
+            <small class="text-success fw-bold d-block text-uppercase" style="font-size: 0.7rem;">Remaining</small>
+            <span class="fw-bold fs-5 text-success">₹ {{ "{:,.2f}".format(remaining) }}</span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Day-wise Itinerary Tabs & Actions -->
+  <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+    <!-- Day Tabs -->
+    <ul class="nav nav-pills" id="dayTabs" role="tablist">
+      {% for day in days_data %}
+        <li class="nav-item me-2 mb-2" role="presentation">
+          <button class="nav-link day-tab-btn {% if loop.first %}active{% endif %}" 
+                  id="tab-day-{{ day.day_num }}" 
+                  data-bs-toggle="pill" 
+                  data-bs-target="#content-day-{{ day.day_num }}" 
+                  type="button" role="tab">
+            Day {{ day.day_num }} <small class="opacity-75">({{ day.date.strftime("%b %d") }})</small>
+          </button>
+        </li>
+      {% endfor %}
+    </ul>
+
+    <!-- Add Activity Button -->
+    <a href="{{ url_for('add_activity', trip_id=trip.id) }}" class="btn btn-tp-primary shadow-sm mb-2">
+      <i class="bi bi-plus-lg me-1"></i> Add Activity
+    </a>
+  </div>
+
+  <!-- Tab Contents for Each Day -->
+  <div class="tab-content" id="dayTabsContent">
+    {% for day in days_data %}
+      <div class="tab-pane fade {% if loop.first %}show active{% endif %}" id="content-day-{{ day.day_num }}" role="tabpanel">
+        
+        <div class="card tp-card p-4 border-0 shadow-sm mb-4">
+          <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-3">
+            <div>
+              <h5 class="fw-bold mb-0 text-dark">
+                Day {{ day.day_num }} Activities — <span class="text-muted fw-normal">{{ day.date_str }}</span>
+              </h5>
+            </div>
+            <div class="text-end">
+              <span class="badge bg-light text-dark border px-3 py-2">
+                Day Total: <strong>₹ {{ "{:,.2f}".format(day.day_cost) }}</strong>
+              </span>
+            </div>
+          </div>
+
+          {% if day.activities %}
+            <div class="list-group list-group-flush">
+              {% for act in day.activities %}
+                <div class="list-group-item px-0 py-3 d-flex flex-column flex-sm-row justify-content-between align-items-sm-center border-bottom gap-2">
+                  <div class="d-flex align-items-center gap-3">
+                    
+                    <!-- Time Badge -->
+                    <div class="bg-light border rounded px-2 py-1 text-center" style="min-width: 80px;">
+                      <i class="bi bi-clock small text-muted me-1"></i>
+                      <span class="small fw-bold">
+                        {% if act.activity_time %}
+                          {{ str(act.activity_time)[:5] }}
+                        {% else %}
+                          Anytime
+                        {% endif %}
+                      </span>
+                    </div>
+
+                    <!-- Category Icon -->
+                    <div class="rounded-circle bg-info bg-opacity-10 text-info p-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                      {% if act.category == 'Food' %}
+                        <i class="bi bi-cup-hot fs-5 text-danger"></i>
+                      {% elif act.category == 'Historical' %}
+                        <i class="bi bi-bank fs-5 text-warning"></i>
+                      {% elif act.category == 'Beach' %}
+                        <i class="bi bi-water fs-5 text-primary"></i>
+                      {% else %}
+                        <i class="bi bi-tree fs-5 text-success"></i>
+                      {% endif %}
+                    </div>
+
+                    <!-- Details -->
+                    <div>
+                      <h6 class="fw-bold mb-0 text-dark">{{ act.name }}</h6>
+                      <small class="text-muted">
+                        <i class="bi bi-geo-alt me-1"></i>{{ act.place }}
+                        <span class="badge bg-secondary bg-opacity-10 text-secondary ms-2">{{ act.category }}</span>
+                        {% if act.place_suggestion_name %}
+                          <span class="badge bg-info-subtle text-info border border-info-subtle ms-1">From Explore</span>
+                        {% endif %}
+                      </small>
+                    </div>
+                  </div>
+
+                  <!-- Price & Controls -->
+                  <div class="d-flex align-items-center gap-3 ms-auto ms-sm-0">
+                    <span class="fw-bold text-dark fs-6">
+                      ₹ {{ "{:,.2f}".format(act.estimated_cost) }}
+                    </span>
+
+                    <div class="dropdown">
+                      <button class="btn btn-sm btn-light border rounded-circle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="width: 32px; height: 32px; padding: 0;">
+                        <i class="bi bi-three-dots-vertical"></i>
+                      </button>
+                      <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+                        <li>
+                          <a class="dropdown-item" href="{{ url_for('edit_activity', trip_id=trip.id, activity_id=act.id) }}">
+                            <i class="bi bi-pencil me-2"></i>Edit Activity
+                          </a>
+                        </li>
+                        <li>
+                          <form action="{{ url_for('delete_activity', trip_id=trip.id, activity_id=act.id) }}" method="POST" onsubmit="return confirm('Remove this activity?');">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button type="submit" class="dropdown-item text-danger">
+                              <i class="bi bi-trash me-2"></i>Remove
+                            </button>
+                          </form>
+                        </li>
+                      </ul>
+                    </div>
+
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <!-- No activities for this day -->
+            <div class="text-center py-5">
+              <i class="bi bi-calendar-plus fs-2 text-muted mb-2 d-block"></i>
+              <h6 class="text-dark fw-bold mb-1">No activities planned for Day {{ day.day_num }} yet</h6>
+              <p class="text-muted small mb-3">Add sightseeing stops, restaurant reservations, or adventures.</p>
+              <a href="{{ url_for('add_activity', trip_id=trip.id, date=day.date.isoformat()) }}" class="btn btn-sm btn-tp-primary">
+                <i class="bi bi-plus-lg me-1"></i> Add Activity to Day {{ day.day_num }}
+              </a>
+            </div>
+          {% endif %}
+
+        </div>
+
+      </div>
+    {% endfor %}
+  </div>
+
+</div>
+{% endblock %}

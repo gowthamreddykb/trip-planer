@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Login — Trip Planner{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-5 col-lg-4">
+      
+      <!-- Login Card matching Reference Image 3 Screen 2 -->
+      <div class="card tp-card p-4 p-md-5 border-0 shadow position-relative">
+        
+        <!-- Tab Header Switcher -->
+        <div class="d-flex border-bottom mb-4">
+          <a href="{{ url_for('login') }}" class="flex-fill text-center pb-2 fw-bold text-dark border-bottom border-3 border-dark text-decoration-none">
+            Login
+          </a>
+          <a href="{{ url_for('register') }}" class="flex-fill text-center pb-2 text-muted text-decoration-none">
+            Register
+          </a>
+        </div>
+
+        <div class="text-center mb-4">
+          <h3 class="fw-bold travel-heading mb-1">Welcome Back!</h3>
+          <p class="text-muted small">Login to continue your journey.</p>
+        </div>
+
+        <form action="{{ url_for('login') }}" method="POST">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          {% if next %}
+            <input type="hidden" name="next" value="{{ next }}">
+          {% endif %}
+
+          <div class="mb-3">
+            <label class="form-label small fw-bold">Username or Email</label>
+            <div class="input-group">
+              <span class="input-group-text bg-light text-muted"><i class="bi bi-person"></i></span>
+              <input type="text" name="login_input" class="form-control" value="{{ login_input or '' }}" required autofocus placeholder="john or john@example.com">
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label small fw-bold">Password</label>
+            <div class="input-group">
+              <span class="input-group-text bg-light text-muted"><i class="bi bi-lock"></i></span>
+              <input type="password" name="password" id="loginPassword" class="form-control" required placeholder="••••••••">
+              <button class="btn btn-outline-secondary" type="button" onclick="const p = document.getElementById('loginPassword'); p.type = p.type === 'password' ? 'text' : 'password';">
+                <i class="bi bi-eye"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-between align-items-center mb-4 small">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="rememberMe">
+              <label class="form-check-label text-muted" for="rememberMe">Remember me</label>
+            </div>
+            <a href="#" class="text-muted text-decoration-none" onclick="alert('For demo accounts, use john / password123 or admin / admin123'); return false;">Forgot password?</a>
+          </div>
+
+          <button type="submit" class="btn btn-tp-primary w-100 py-2 fw-bold shadow-sm mb-3">
+            Login
+          </button>
+        </form>
+
+        <div class="text-center small text-muted pt-2 border-top">
+          Don't have an account? 
+          <a href="{{ url_for('register') }}" class="text-danger fw-bold text-decoration-none">Register</a>
+        </div>
+
+        <!-- Demo credentials helper -->
+        <div class="mt-4 p-2 bg-light rounded text-center small text-muted border">
+          <span class="fw-semibold">Demo credentials:</span><br>
+          User: <code>john</code> / <code>password123</code><br>
+          Admin: <code>admin</code> / <code>admin123</code>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

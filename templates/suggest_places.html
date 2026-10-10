@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %}Suggest Places — Trip Planner{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <!-- Header matching Reference Image 1 -->
+  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <div>
+      <div class="d-flex align-items-center gap-2">
+        <i class="bi bi-geo-alt-fill fs-2 text-danger"></i>
+        <h2 class="fw-bold travel-heading mb-0">Suggest Places</h2>
+      </div>
+      <p class="text-muted fs-6 mt-1 mb-0">
+        Add multiple places to one destination in a single submission
+      </p>
+    </div>
+
+    <div class="d-none d-md-flex gap-3 align-items-center">
+      <span class="travel-stamp-square"><i class="bi bi-compass"></i> Explore • Dream • Discover</span>
+      <span class="travel-stamp"><i class="bi bi-airplane"></i> TRAVEL<br>MORE</span>
+    </div>
+  </div>
+
+  <form id="suggestPlacesForm" action="{{ url_for('suggest_places') }}" method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+    <!-- PART A: Shared Destination Information Card (Matches Image 1 Top Card) -->
+    <div class="card tp-card p-4 border-0 shadow-sm mb-4">
+      <div class="row g-3">
+        
+        <div class="col-md-4">
+          <label class="tp-field-label">Destination / Region <span class="text-danger">*</span></label>
+          <div class="tp-input-group">
+            <span class="input-icon"><i class="bi bi-geo-alt"></i></span>
+            <input type="text" name="destination_name" class="form-control" required placeholder="e.g., Kerala">
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <label class="tp-field-label">City / Area (Optional)</label>
+          <div class="tp-input-group">
+            <span class="input-icon"><i class="bi bi-pin-map"></i></span>
+            <input type="text" name="city_area" class="form-control" placeholder="e.g., Alleppey, Munnar, Kochi">
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <label class="tp-field-label">Overview Description <span class="text-danger">*</span></label>
+          <div class="tp-textarea-wrapper">
+            <textarea name="overview_description" rows="2" maxlength="500" required 
+                      oninput="updateCharCount(this, 'overviewCount')" 
+                      placeholder="Kerala is a beautiful state in southern India, known for its backwaters, tea gardens, beaches..."></textarea>
+            <span class="tp-char-count" id="overviewCount">0/500</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- PART B: Section Divider matching Reference Image 1 -->
+    <div class="section-divider-title">
+      <i class="bi bi-geo-alt-fill text-danger fs-5"></i>
+      <h4>Places to include</h4>
+      <div class="section-divider-line"></div>
+    </div>
+
+    <!-- Container where JavaScript injects repeating Place Cards -->
+    <div id="placesContainer">
+      <!-- Injected by static/js/places.js -->
+    </div>
+
+    <!-- PART D: Shared Travel Information Card (Matches Image 1 Bottom Card) -->
+    <div class="card tp-card p-4 border-0 shadow-sm mb-4">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="tp-field-label"><i class="bi bi-compass text-warning me-1"></i>Travel Tips <span class="text-muted fw-normal">(Shared for all places)</span></label>
+          <div class="tp-textarea-wrapper">
+            <textarea name="travel_tips" rows="3" maxlength="500" 
+                      oninput="updateCharCount(this, 'tipsCount')" 
+                      placeholder="e.g., Carry light clothes, stay hydrated, respect local culture and traditions..."></textarea>
+            <span class="tp-char-count" id="tipsCount">0/500</span>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <label class="tp-field-label"><i class="bi bi-cup-hot text-danger me-1"></i>Local Food <span class="text-muted fw-normal">(Shared for all places)</span></label>
+          <div class="tp-textarea-wrapper">
+            <textarea name="local_food" rows="3" maxlength="500" 
+                      oninput="updateCharCount(this, 'foodCount')" 
+                      placeholder="e.g., Appam & Stew, Kerala Sadya, Fresh Seafood, Spices and Coconut-based dishes..."></textarea>
+            <span class="tp-char-count" id="foodCount">0/500</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PART E: Submit All Places Button (Matches Image 1 Bottom Action) -->
+    <div class="text-center py-3">
+      <button type="submit" class="btn btn-tp-primary btn-lg px-5 shadow fw-bold w-100" style="max-width: 500px; border-radius: 12px; font-size: 1.05rem;">
+        <i class="bi bi-send-fill me-2"></i> Submit All Places
+      </button>
+    </div>
+
+  </form>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/places.js') }}"></script>
+{% endblock %}

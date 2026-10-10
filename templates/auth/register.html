@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Register — Trip Planner{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-5 col-lg-4">
+      
+      <div class="card tp-card p-4 p-md-5 border-0 shadow position-relative">
+        
+        <!-- Tab Header Switcher -->
+        <div class="d-flex border-bottom mb-4">
+          <a href="{{ url_for('login') }}" class="flex-fill text-center pb-2 text-muted text-decoration-none">
+            Login
+          </a>
+          <a href="{{ url_for('register') }}" class="flex-fill text-center pb-2 fw-bold text-dark border-bottom border-3 border-dark text-decoration-none">
+            Register
+          </a>
+        </div>
+
+        <div class="text-center mb-4">
+          <h3 class="fw-bold travel-heading mb-1">Join Trip Planner</h3>
+          <p class="text-muted small">Create an account to start planning your trips.</p>
+        </div>
+
+        <form action="{{ url_for('register') }}" method="POST">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+          <div class="mb-3">
+            <label class="form-label small fw-bold">Username</label>
+            <div class="input-group">
+              <span class="input-group-text bg-light text-muted"><i class="bi bi-person"></i></span>
+              <input type="text" name="username" class="form-control" value="{{ username or '' }}" required autofocus placeholder="e.g., traveler_alex">
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label small fw-bold">Email Address</label>
+            <div class="input-group">
+              <span class="input-group-text bg-light text-muted"><i class="bi bi-envelope"></i></span>
+              <input type="email" name="email" class="form-control" value="{{ email or '' }}" required placeholder="alex@example.com">
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label small fw-bold">Password</label>
+            <div class="input-group">
+              <span class="input-group-text bg-light text-muted"><i class="bi bi-lock"></i></span>
+              <input type="password" name="password" class="form-control" required placeholder="At least 6 characters">
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label small fw-bold">Confirm Password</label>
+            <div class="input-group">
+              <span class="input-group-text bg-light text-muted"><i class="bi bi-shield-check"></i></span>
+              <input type="password" name="confirm_password" class="form-control" required placeholder="Repeat password">
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-tp-coral w-100 py-2 fw-bold shadow-sm mb-3">
+            Create Account
+          </button>
+        </form>
+
+        <div class="text-center small text-muted pt-2 border-top">
+          Already have an account? 
+          <a href="{{ url_for('login') }}" class="text-primary fw-bold text-decoration-none">Login</a>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

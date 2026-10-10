@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Review — Place Suggestions{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <div>
+      <span class="badge bg-danger text-white mb-1"><i class="bi bi-shield-lock me-1"></i>Administrator Moderation</span>
+      <h3 class="fw-bold travel-heading mb-0">Place Suggestions Review</h3>
+    </div>
+    
+    <!-- Filter status pills -->
+    <div class="btn-group" role="group">
+      <a href="{{ url_for('admin_suggestions', status='pending') }}" class="btn btn-sm {% if current_status == 'pending' %}btn-warning text-dark fw-bold{% else %}btn-outline-secondary{% endif %}">
+        Pending
+      </a>
+      <a href="{{ url_for('admin_suggestions', status='approved') }}" class="btn btn-sm {% if current_status == 'approved' %}btn-success text-white fw-bold{% else %}btn-outline-secondary{% endif %}">
+        Approved
+      </a>
+      <a href="{{ url_for('admin_suggestions', status='rejected') }}" class="btn btn-sm {% if current_status == 'rejected' %}btn-danger text-white fw-bold{% else %}btn-outline-secondary{% endif %}">
+        Rejected
+      </a>
+    </div>
+  </div>
+
+  {% if suggestions %}
+    <div class="row g-4">
+      {% for s in suggestions %}
+        <div class="col-lg-6">
+          <div class="card tp-card p-3 border-0 shadow-sm h-100">
+            <div class="row g-3">
+              <div class="col-sm-4 text-center">
+                <img src="{{ s.image_url or 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=400&q=80' }}" 
+                     alt="{{ s.name }}" class="img-fluid rounded shadow-sm" style="height: 140px; width: 100%; object-fit: cover;">
+                <div class="mt-2">
+                  {% if s.status == 'approved' %}
+                    <span class="badge bg-success-subtle text-success border border-success-subtle">Approved</span>
+                  {% elif s.status == 'rejected' %}
+                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle">Rejected</span>
+                  {% else %}
+                    <span class="badge bg-warning-subtle text-warning border border-warning-subtle">Pending Review</span>
+                  {% endif %}
+                </div>
+              </div>
+
+              <div class="col-sm-8 d-flex flex-column">
+                <div class="d-flex justify-content-between align-items-start">
+                  <h5 class="fw-bold text-dark mb-0">{{ s.name }}</h5>
+                  <span class="badge bg-secondary-subtle text-secondary small">{{ s.category }}</span>
+                </div>
+                
+                <small class="text-muted mb-2">
+                  <i class="bi bi-geo-alt text-danger me-1"></i>{{ s.destination_name }} • 
+                  Submitted by: <strong>{{ s.submitter_username or 'Guest' }}</strong>
+                </small>
+
+                <p class="small text-secondary mb-2" style="max-height: 60px; overflow-y: auto;">
+                  {{ s.short_description }}
+                </p>
+
+                <div class="small text-muted mb-3">
+                  <strong>Cost:</strong> ₹ {{ "{:,.0f}".format(s.estimated_cost_min) }} – ₹ {{ "{:,.0f}".format(s.estimated_cost_max) }} | 
+                  <strong>Best Time:</strong> {{ s.best_time_to_visit }}
+                </div>
+
+                <!-- Admin Action Buttons -->
+                <div class="mt-auto d-flex gap-2">
+                  {% if s.status != 'approved' %}
+                    <form action="{{ url_for('approve_suggestion', place_id=s.id, status=current_status) }}" method="POST" class="d-inline">
+                      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                      <button type="submit" class="btn btn-sm btn-success px-3">
+                        <i class="bi bi-check-lg me-1"></i> Approve
+                      </button>
+                    </form>
+                  {% endif %}
+
+                  {% if s.status != 'rejected' %}
+                    <form action="{{ url_for('reject_suggestion', place_id=s.id, status=current_status) }}" method="POST" class="d-inline">
+                      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                      <button type="submit" class="btn btn-sm btn-outline-danger px-3">
+                        <i class="bi bi-x-lg me-1"></i> Reject
+                      </button>
+                    </form>
+                  {% endif %}
+
+                  <a href="{{ url_for('place_details', place_id=s.id) }}" class="btn btn-sm btn-outline-secondary ms-auto" target="_blank">
+                    Preview <i class="bi bi-box-arrow-up-right"></i>
+                  </a>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="card tp-card p-5 text-center border-0 shadow-sm my-4">
+      <i class="bi bi-check-circle fs-1 text-success mb-3 d-block"></i>
+      <h4 class="fw-bold travel-heading mb-1">No {{ current_status|capitalize }} Suggestions</h4>
+      <p class="text-muted small">All submissions have been reviewed.</p>
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}{{ action }} Trip — Trip Planner{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      
+      <!-- Back Link -->
+      <a href="{% if action == 'Edit' %}{{ url_for('trip_detail', trip_id=trip_id) }}{% else %}{{ url_for('my_trips') }}{% endif %}" class="btn btn-outline-secondary btn-sm mb-3">
+        <i class="bi bi-arrow-left me-1"></i> Back to {% if action == 'Edit' %}Trip Details{% else %}My Trips{% endif %}
+      </a>
+
+      <div class="card tp-card p-4 p-md-5 border-0 shadow-sm position-relative">
+        
+        <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
+          <div>
+            <h3 class="fw-bold travel-heading mb-1">{{ action }} Trip</h3>
+            <p class="text-muted small mb-0">Set your destination, travel dates, and spending budget.</p>
+          </div>
+          <span class="travel-stamp-square d-none d-sm-inline-block">
+            Collect Moments, Not Things
+          </span>
+        </div>
+
+        <form id="tripForm" action="{% if action == 'Edit' %}{{ url_for('edit_trip', trip_id=trip_id) }}{% else %}{{ url_for('create_trip') }}{% endif %}" method="POST">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+          <div class="mb-4">
+            <label class="form-label fw-bold">Destination <span class="text-danger">*</span></label>
+            <div class="input-group">
+              <span class="input-group-text bg-light"><i class="bi bi-geo-alt"></i></span>
+              <input type="text" name="destination" class="form-control" value="{{ destination or '' }}" required autofocus placeholder="e.g., Goa, Kerala, Kyoto, Jaipur">
+            </div>
+            <div class="form-text">Where are you traveling to?</div>
+          </div>
+
+          <div class="row g-3 mb-4">
+            <div class="col-md-6">
+              <label class="form-label fw-bold">Start Date <span class="text-danger">*</span></label>
+              <div class="input-group">
+                <span class="input-group-text bg-light"><i class="bi bi-calendar3"></i></span>
+                <input type="date" name="start_date" id="startDate" class="form-control" value="{{ start_date or '' }}" required>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label fw-bold">End Date <span class="text-danger">*</span></label>
+              <div class="input-group">
+                <span class="input-group-text bg-light"><i class="bi bi-calendar3"></i></span>
+                <input type="date" name="end_date" id="endDate" class="form-control" value="{{ end_date or '' }}" required>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label fw-bold">Budget (₹) <span class="text-danger">*</span></label>
+            <div class="input-group">
+              <span class="input-group-text bg-light fw-bold">₹</span>
+              <input type="number" name="budget" class="form-control" value="{{ budget or '5000' }}" min="0" step="100" required placeholder="e.g., 5000">
+            </div>
+            <div class="form-text">Your target maximum expenditure for this trip.</div>
+          </div>
+
+          <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+            <a href="{% if action == 'Edit' %}{{ url_for('trip_detail', trip_id=trip_id) }}{% else %}{{ url_for('my_trips') }}{% endif %}" class="btn btn-outline-secondary px-4">
+              Cancel
+            </a>
+            <button type="submit" class="btn btn-tp-primary px-4 fw-bold">
+              {{ action }} Trip
+            </button>
+          </div>
+
+        </form>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

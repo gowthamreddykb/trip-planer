@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+
+{% block title %}Trip Planner — Plan Your Next Adventure{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <!-- Hero Banner matching Reference Image 3 Screen 1 -->
+  <div class="position-relative rounded-4 overflow-hidden shadow-sm mb-5 text-white" 
+       style="background: linear-gradient(rgba(9, 64, 68, 0.75), rgba(9, 64, 68, 0.85)), url('https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=1600&q=80') center/cover; min-height: 420px; display: flex; align-items: center;">
+    
+    <div class="container p-4 p-md-5">
+      <div class="row align-items-center">
+        <div class="col-lg-7">
+          <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold mb-3">
+            <i class="bi bi-stars me-1"></i> Small Trips, Big Memories
+          </span>
+          <h1 class="display-4 fw-bold mb-3 travel-heading text-white" style="letter-spacing: -0.5px;">
+            Plan a trip your way
+          </h1>
+          <p class="lead mb-4 text-light" style="max-width: 520px; opacity: 0.95;">
+            Create your own trips, add activities, organize day-wise travel plans, track budgets automatically, and explore stunning destinations with fellow travelers.
+          </p>
+          <div class="d-flex gap-3 flex-wrap">
+            {% if current_user %}
+              <a href="{{ url_for('create_trip') }}" class="btn btn-tp-coral btn-lg px-4 shadow">
+                <i class="bi bi-plus-circle me-2"></i> Create a Trip
+              </a>
+              <a href="{{ url_for('my_trips') }}" class="btn btn-outline-light btn-lg px-4">
+                <i class="bi bi-briefcase me-2"></i> View My Trips
+              </a>
+            {% else %}
+              <a href="{{ url_for('register') }}" class="btn btn-tp-coral btn-lg px-4 shadow">
+                Get Started <i class="bi bi-arrow-right ms-2"></i>
+              </a>
+              <a href="{{ url_for('explore') }}" class="btn btn-outline-light btn-lg px-4">
+                Explore Places <i class="bi bi-compass ms-2"></i>
+              </a>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="col-lg-5 text-center d-none d-lg-block">
+          <div class="bg-white p-3 rounded-4 shadow-lg text-dark d-inline-block text-start" style="max-width: 320px; transform: rotate(2deg);">
+            <img src="https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?auto=format&fit=crop&w=600&q=80" 
+                 alt="Kerala Backwaters" class="img-fluid rounded-3 mb-2" style="height: 190px; width: 100%; object-fit: cover;">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h6 class="fw-bold mb-0">Kerala, India</h6>
+                <small class="text-muted"><i class="bi bi-geo-alt"></i> Backwaters & Tea Hills</small>
+              </div>
+              <span class="badge bg-success-subtle text-success border border-success-subtle">Top Pick</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Popular Destinations Section (Matching Image 3 Screen 1) -->
+  <div class="mb-5">
+    <div class="d-flex justify-content-between align-items-end mb-4">
+      <div>
+        <h3 class="fw-bold travel-heading mb-1"><i class="bi bi-compass text-danger me-2"></i>Popular Destinations</h3>
+        <p class="text-muted mb-0">Handpicked places with rich culture, nature, and unforgettable experiences.</p>
+      </div>
+      <a href="{{ url_for('explore') }}" class="btn btn-tp-outline btn-sm">
+        View All Places <i class="bi bi-arrow-right ms-1"></i>
+      </a>
+    </div>
+
+    <div class="row g-4">
+      {% if popular_destinations %}
+        {% for dest in popular_destinations %}
+          <div class="col-6 col-md-3">
+            <div class="card h-100 tp-card tp-card-hover overflow-hidden border-0 shadow-sm">
+              <div class="position-relative">
+                <img src="{{ dest.image_url or 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=600&q=80' }}" 
+                     class="card-img-top" alt="{{ dest.name }}" style="height: 160px; object-fit: cover;">
+                <span class="badge bg-dark bg-opacity-75 position-absolute bottom-0 end-0 m-2">
+                  <i class="bi bi-pin-map me-1"></i>{{ dest.place_count }} Places
+                </span>
+              </div>
+              <div class="card-body p-3">
+                <h5 class="card-title fw-bold mb-1">{{ dest.name }}</h5>
+                <p class="card-text text-muted small mb-2"><i class="bi bi-geo-alt me-1"></i>{{ dest.city_area or 'Featured Region' }}</p>
+                <a href="{{ url_for('explore', search=dest.name) }}" class="btn btn-sm btn-tp-primary w-100">
+                  Explore {{ dest.name }}
+                </a>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="col-12 text-center py-4">
+          <p class="text-muted">No destinations loaded yet.</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Features Highlight -->
+  <div class="row g-4 py-4 mb-4">
+    <div class="col-md-4">
+      <div class="card tp-card h-100 p-4 border-0 shadow-sm text-center">
+        <div class="rounded-circle bg-info bg-opacity-10 d-inline-flex align-items-center justify-content-center mx-auto mb-3" style="width: 60px; height: 60px;">
+          <i class="bi bi-calendar-week fs-3 text-info"></i>
+        </div>
+        <h5 class="fw-bold mb-2">Day-by-Day Itineraries</h5>
+        <p class="text-muted small mb-0">Group activities by date, arrange schedules by morning, afternoon, and evening, and visualize your daily adventure timeline.</p>
+      </div>
+    </div>
+    
+    <div class="col-md-4">
+      <div class="card tp-card h-100 p-4 border-0 shadow-sm text-center">
+        <div class="rounded-circle bg-success bg-opacity-10 d-inline-flex align-items-center justify-content-center mx-auto mb-3" style="width: 60px; height: 60px;">
+          <i class="bi bi-cash-coin fs-3 text-success"></i>
+        </div>
+        <h5 class="fw-bold mb-2">Automatic Budget Tracker</h5>
+        <p class="text-muted small mb-0">Set your trip budget and let Trip Planner automatically calculate total activity expenses and remaining funds in real-time.</p>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card tp-card h-100 p-4 border-0 shadow-sm text-center">
+        <div class="rounded-circle bg-warning bg-opacity-10 d-inline-flex align-items-center justify-content-center mx-auto mb-3" style="width: 60px; height: 60px;">
+          <i class="bi bi-send-plus fs-3 text-warning"></i>
+        </div>
+        <h5 class="fw-bold mb-2">Multi-Place Suggestions</h5>
+        <p class="text-muted small mb-0">Contribute your favorite hidden gems! Submit multiple places for one destination in a single convenient submission form.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Call to action Banner -->
+  <div class="card tp-card p-4 p-md-5 bg-white border-0 shadow-sm rounded-4 text-center my-4 position-relative overflow-hidden">
+    <div class="position-relative z-1">
+      <h2 class="fw-bold travel-heading mb-2">Ready to plan your unforgettable getaway?</h2>
+      <p class="text-muted mb-4" style="max-width: 600px; margin: 0 auto;">
+        Join travelers discovering and planning seamless trips across India and beyond.
+      </p>
+      <div class="d-flex justify-content-center gap-3">
+        {% if current_user %}
+          <a href="{{ url_for('create_trip') }}" class="btn btn-tp-primary btn-lg px-4">
+            <i class="bi bi-plus-circle me-2"></i> Start Planning Now
+          </a>
+        {% else %}
+          <a href="{{ url_for('register') }}" class="btn btn-tp-coral btn-lg px-4">
+            Create Free Account
+          </a>
+          <a href="{{ url_for('login') }}" class="btn btn-outline-secondary btn-lg px-4">
+            Log In
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
