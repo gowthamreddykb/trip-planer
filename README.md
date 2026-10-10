@@ -181,3 +181,5 @@ All 21 unit and integration tests will execute and verify authentication, trip a
    - Modifying a trip's dates is blocked if existing activities would fall outside the new date range.
 3. **Database Connection Refused**:
    - Verify that your MySQL server (`service mariadb status` or `service mysql status`) is running on port 3306.
+# trip-planer
+2ca0f9ff17cbe9fae29ded05a1270450d28ad2ac
